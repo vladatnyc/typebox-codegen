@@ -618,7 +618,7 @@ export namespace TypeScriptToTypeBox {
   /** Generates TypeBox types from TypeScript interface and type definitions */
   export function Generate(typescriptCode: string, options?: TypeScriptToTypeBoxOptions) {
     useExportsEverything = options?.useExportEverything ?? false
-    useIdentifiers = options?.useIdentifiers ?? false //CHANGED
+    useIdentifiers = options?.useIdentifiers ?? true //CHANGED
     useTypeBoxImport = options?.useTypeBoxImport ?? true
     typenames.clear()
     useImports = false
