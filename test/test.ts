@@ -1,4 +1,4 @@
-import * as codegen from "../src/index";
+import * as codegen from '../src/index'
 
 const input = `
 export interface A {
@@ -11,6 +11,6 @@ export interface B extends Omit<A,"x" | "y"> {
   a: number
 }
 `
-const generatedTs = codegen.TypeScriptToTypeBox.Generate(input,{useIdentifiers: true});
+const generatedTs = codegen.TypeScriptToTypeBox.Generate(input, { useIdentifiers: true })
 
-console.log(generatedTs);
+console.log(generatedTs)

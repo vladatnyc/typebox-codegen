@@ -406,7 +406,7 @@ export namespace TypeScriptToTypeBox {
     yield `Type.Index(${obj}, ${key})`
   }
 
-    function* OLD_ExpressionWithTypeArguments(node: Ts.ExpressionWithTypeArguments): IterableIterator<string> {
+  function* OLD_ExpressionWithTypeArguments(node: Ts.ExpressionWithTypeArguments): IterableIterator<string> {
     const name = Collect(node.expression)
     const typeArguments = node.typeArguments === undefined ? [] : node.typeArguments.map((node) => Collect(node))
     // todo: default type argument (resolve `= number` from `type Foo<T = number>`)
@@ -417,29 +417,29 @@ export namespace TypeScriptToTypeBox {
     function mapTypeNameInHeritageClause(name: string): string {
       switch (name) {
         case 'Omit':
-          return 'Type.Omit';
+          return 'Type.Omit'
         case 'Pick':
-          return 'Type.Pick';
+          return 'Type.Pick'
         case 'Partial':
-          return 'Type.Partial';
+          return 'Type.Partial'
         case 'Required':
-          return 'Type.Required';
+          return 'Type.Required'
         case 'Array':
-          return 'Type.Array';
+          return 'Type.Array'
         case 'Record':
-          return 'Type.Record';
+          return 'Type.Record'
         // Add other mappings as needed
         default:
-          return name;
+          return name
       }
     }
-    
-    const originalName = Collect(node.expression);
-    const mappedName = mapTypeNameInHeritageClause(originalName);
-    const typeArguments = node.typeArguments === undefined ? [] : node.typeArguments.map((node) => Collect(node));
-    return yield typeArguments.length === 0 ? `${mappedName}` : `${mappedName}(${typeArguments.join(', ')})`;
+
+    const originalName = Collect(node.expression)
+    const mappedName = mapTypeNameInHeritageClause(originalName)
+    const typeArguments = node.typeArguments === undefined ? [] : node.typeArguments.map((node) => Collect(node))
+    return yield typeArguments.length === 0 ? `${mappedName}` : `${mappedName}(${typeArguments.join(', ')})`
   }
-  
+
   function* TypeParameterDeclaration(node: Ts.TypeParameterDeclaration): IterableIterator<string> {
     yield node.name.getText()
   }
@@ -637,39 +637,37 @@ export namespace TypeScriptToTypeBox {
 
     //start of modification
     function getExportedEnumNames(typescriptCode: string): string[] {
-      const enumNameRegex = /export\s+enum\s+Enum(\w+)\s*{/g;
-      const enumNames: string[] = [];
-      let match;
+      const enumNameRegex = /export\s+enum\s+Enum(\w+)\s*{/g
+      const enumNames: string[] = []
+      let match
       while ((match = enumNameRegex.exec(typescriptCode)) !== null) enumNames.push(match[1])
-      return enumNames;
+      return enumNames
     }
 
     function replaceEnumItemsWithTypeLiteral(inputStr, enumNames) {
       if (!Array.isArray(enumNames) || enumNames.length === 0) {
         // If no enum names are provided, return the original string unchanged
-        return inputStr;
+        return inputStr
       }
-      
+
       // Escape special regex characters in enum names to prevent regex errors
-      const escapedEnumNames = enumNames.map(name => 
-          name.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
-      );  
-  
+      const escapedEnumNames = enumNames.map((name) => name.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'))
+
       // Create a regex pattern that matches any of the enumNames followed by a dot and an item
       // Example pattern for enumNames ['Color', 'Size']: /\b(Color|Size)\.([A-Za-z0-9_]+)\b/g
-      const enumPattern = '\\b(' + escapedEnumNames.join('|') + ')\\.([A-Za-z0-9_]+)\\b';
-      const regex = new RegExp(enumPattern, 'g');
-  
+      const enumPattern = '\\b(' + escapedEnumNames.join('|') + ')\\.([A-Za-z0-9_]+)\\b'
+      const regex = new RegExp(enumPattern, 'g')
+
       // Replace each match with Type.Literal(enumName.item)
       const replacedStr = inputStr.replace(regex, (match, enumName, item) => {
-          return `Type.Literal(Enum${enumName}.${item})`;
-      });
-  
-      return replacedStr;
-    } 
+        return `Type.Literal(Enum${enumName}.${item})`
+      })
 
-    return replaceEnumItemsWithTypeLiteral(typescript, getExportedEnumNames(typescript));
-    //end of modification 
+      return replacedStr
+    }
+
+    return replaceEnumItemsWithTypeLiteral(typescript, getExportedEnumNames(typescript))
+    //end of modification
     return typescript
   }
 }
