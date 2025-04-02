@@ -14,7 +14,8 @@
     "publish": "hammer task publish",
     "publish:dev": "hammer task publish_dev",
     "start": "hammer task start",
-    "test": "hammer task test"
+    "test": "hammer task test",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
